@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script language="JavaScript" type="text/javascript"
+            src="node_modules/ui-leaflet/node_modules/angular/angular.min.js">
+        </script>
+        <script language="JavaScript" type="text/javascript"
+            src="node_modules/ui-leaflet/node_modules/leaflet/dist/leaflet.js">
+        </script>
+        <script language="JavaScript" type="text/javascript"
+            src="node_modules/ui-leaflet/node_modules/angular-simple-logger/dist/angular-simple-logger.min.js">
+        </script>
+        <script language="JavaScript" type="text/javascript"
+            src="node_modules/ui-leaflet/dist/ui-leaflet.min.js">
+        </script>
+        <script language="JavaScript" type="text/javascript"
+            src="karte.js">
+        </script>
+        <link rel="stylesheet" type="text/css" href="node_modules/ui-leaflet/node_modules/leaflet/dist/leaflet.css" />
+        <style>
+            input.valid {background: #cfc}
+            input.error {background: #fcc}
+            div.link {font-size: 8pt; line-height: 9pt}
+            div.highlight {background: #ccf}
+        </style>
+    </head>
+    <body ng-app="Karte" ng-controller="SimpleMapController">
+        <div style="width: 60%; float: left"><leaflet defaults="defaults" layers="layers"
+            lf-center="{lat: 51, lng: 9.5, zoom: 7}" geojson="geojson"
+            height="100%" width="100%"></leaflet></div>
+        <div style="float: right; padding-left: 10px; width: 39%; height: 100%; overflow-y: auto">
+            <form name="streckeForm" ng-submit="streckeLaden()">
+                <input type="text" name="nummer" size="4"
+                    ng-pattern="'\\d{4}'" ng-model="input.strecke"
+                    class="{{ streckeForm.nummer.$error.pattern ? 'error' : input.strecke ? 'valid' : '' }}"/>
+                <input type="submit" value="laden"/>
+            </form>
+            <br />
+            <div>{{ highlight }}</div>
+            <div class="link {{ highlight == s.properties.name ? 'highlight' : '' }}" ng-repeat="s in streckenteile">
+                {{ s.properties.name }}
+            </div>
+        </div>
+    </body>
+</html>
