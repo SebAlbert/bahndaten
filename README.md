@@ -12,4 +12,4 @@ especially attribute, path, and token index.
 Copyright Sebastian Albert, 2016, all rights reserved.
 
 Derived data from the original data by DB Netz must be licensed
-CC-BY-SA 4.0 international, see the link above.
+CC-BY 4.0 international, see the link above.
