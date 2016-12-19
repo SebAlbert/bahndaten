@@ -41,6 +41,7 @@ declare
                     </geometry>
                     <properties type="object">
                         <name>{ $m/net:inspireId/base:Identifier/base:localId/text() }</name>
+                        <xml>{serialize($m)}</xml>
                     </properties>
                 </_>
         }

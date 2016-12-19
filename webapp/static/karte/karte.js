@@ -4,6 +4,8 @@ angular
 .controller("SimpleMapController", [ '$scope', '$http', 'leafletMapEvents', function($scope, $http, leafletMapEvents) {
     angular.extend($scope, {
         input: {},
+        elementHistory: [],
+        history: {index: -1},
         defaults: {
             minZoom: 2,
             maxZoom: 17,
@@ -53,7 +55,8 @@ angular
         geojson: {
             data: {type: "FeatureCollection", features: []},
             style: {
-                weight: 10
+                weight: 2,
+                opacity: 1
             }
         },
         streckeLaden: function() {
@@ -62,7 +65,22 @@ angular
                 angular.extend($scope, { streckenteile: response.data });
                 $scope.geojson.data.features = response.data;
             });
+        },
+        elementLaden: function(id, setindex) {
+            if (id) this.input.id = id;
+            if (this.input.id == this.elementHistory[this.history.index]) return;
+            $http.get("/bahndata-element/" + this.input.id)
+            .then(function(response) {
+                angular.extend($scope, { element: response.data });
+            });
+            if (setindex === undefined) {
+                this.history.index = this.elementHistory.length;
+                this.elementHistory.push(this.input.id + "");
+            }
+            else this.history.index = setindex;
+            $scope.element = {};
         }
+
     });
     console.log(leafletMapEvents.getAvailableMapEvents());
     $scope.$on("leafletDirectiveGeoJson.mouseover", function(e, t) {
