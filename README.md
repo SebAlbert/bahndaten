@@ -11,5 +11,5 @@ especially attribute, path, and token index.
 
 Copyright Sebastian Albert, 2016, all rights reserved.
 
-Derived data from the original data by DB Netz must be licensed
-CC-BY 4.0 international, see the link above.
+Derived data from the original data by DB Netz must respect the
+CC-BY 4.0 international with proper attribution, see the link above.
