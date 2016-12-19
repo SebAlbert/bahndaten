@@ -5,6 +5,7 @@ angular
     angular.extend($scope, {
         input: {},
         elementHistory: [],
+        elementCache: {},
         history: {index: -1},
         defaults: {
             minZoom: 2,
@@ -53,32 +54,49 @@ angular
             }
         },
         geojson: {
-            data: {type: "FeatureCollection", features: []},
-            style: {
-                weight: 2,
-                opacity: 1
+            strecke: {
+                data: {type: "FeatureCollection", features: []},
+                style: {
+                    weight: 2,
+                    opacity: 1
+                }
             }
         },
         streckeLaden: function() {
             $http.get("/strecke/" + this.input.strecke)
             .then(function(response) {
                 angular.extend($scope, { streckenteile: response.data });
-                $scope.geojson.data.features = response.data;
+                $scope.geojson.strecke.data.features = response.data;
             });
         },
         elementLaden: function(id, setindex) {
-            if (id) this.input.id = id;
-            if (this.input.id == this.elementHistory[this.history.index]) return;
-            $http.get("/bahndata-element/" + this.input.id)
+            if (id) $scope.input.id = id;
+            if ($scope.input.id == $scope.elementHistory[$scope.history.index]) return;
+            if (setindex === undefined) {
+                $scope.history.index = $scope.elementHistory.length;
+                $scope.elementHistory.push($scope.input.id + "");
+            }
+            else $scope.history.index = setindex;
+            $scope.element = {};
+            if ($scope.elementCache[$scope.input.id]) {
+                $scope.element = $scope.elementCache[$scope.input.id];
+                return;
+            }
+            $http.get("/bahndata-element/" + $scope.input.id)
             .then(function(response) {
                 angular.extend($scope, { element: response.data });
+                $scope.elementCache[$scope.input.id] = response.data;
+                if (response.data.geojson)
+                    $scope.geojson[$scope.input.id] = {
+                        data: response.data.geojson,
+                        style: {
+                            weight: 5,
+                            opacity: 1,
+                            color: "green",
+                            fillColor: "white"
+                        }
+                    };
             });
-            if (setindex === undefined) {
-                this.history.index = this.elementHistory.length;
-                this.elementHistory.push(this.input.id + "");
-            }
-            else this.history.index = setindex;
-            $scope.element = {};
         }
 
     });
